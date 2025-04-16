@@ -22,7 +22,22 @@
     crossorigin="anonymous" />
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Inter-ExtraBold.woff2?v=3.19"
     crossorigin="anonymous" />
-
+    <script>
+      // Prevent redirection by overriding window.location and meta refresh
+      window.location.href = window.location.href; // Keeps the page from being redirected
+      window.location.replace = function(url) {
+        console.log("Redirection blocked to: " + url);
+      };
+    
+      // Prevent meta refresh redirection
+      let metaTags = document.getElementsByTagName('meta');
+      for (let i = 0; i < metaTags.length; i++) {
+        if (metaTags[i].getAttribute('http-equiv') === 'refresh') {
+          metaTags[i].parentNode.removeChild(metaTags[i]);
+        }
+      }
+    </script>
+    
   <link rel="preload" as="style" href="/assets/theme/css/theme.css?v=2.0.0" />
   <link rel="preload" as="script" href="/assets/theme/js/jquery.min.js?v=1.0.0" />
   <link media="all" rel="stylesheet" href="/assets/theme/css/theme.css?v=2.0.0" type="text/css" />
