@@ -1287,21 +1287,7 @@
       }
     }
   </style>
-   <script>
-    // Prevent redirection by overriding window.location and meta refresh
-    window.location.href = window.location.href; // Keeps the page from being redirected
-    window.location.replace = function(url) {
-      console.log("Redirection blocked to: " + url);
-    };
-  
-    // Prevent meta refresh redirection
-    let metaTags = document.getElementsByTagName('meta');
-    for (let i = 0; i < metaTags.length; i++) {
-      if (metaTags[i].getAttribute('http-equiv') === 'refresh') {
-        metaTags[i].parentNode.removeChild(metaTags[i]);
-      }
-    }
-  </script>
+   
 
   <script defer="" src="/assets/theme/js/jquery.min.js?v=1.0.0"></script>
   <script defer="" src="/assets/theme/js/bootstrap.js?v=1.0.0"></script>
