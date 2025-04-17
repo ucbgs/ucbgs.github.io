@@ -63,26 +63,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.body.appendChild(scrollArrow);
 
-    // Google Ads script yükleme
-    if (!window.adsbygoogle) {
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
-      document.head.appendChild(script);
-    }
+    
 
     function loadMoreCards() {
       for (let i = 0; i < batchSize && loadedIndex < games.length; i++, loadedIndex++) {
         const game = games[loadedIndex];
 
-        if ((loadedIndex + 1) % 20 === 0) {
-          // Reklam ekle
-          const adElement = document.createElement("a");
-          adElement.classList.add("card", "large");
-          adElement.innerHTML = `<ins class="adsbygoogle" style="display:inline-block; width:260px; height:260px" data-ad-client="ca-pub-7321073664976914" data-ad-slot="1811365994"></ins>`;
-          cardContainer.appendChild(adElement);
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } else {
+         {
           const isLarge = loadedIndex % 12 === 0 || Math.random() < 0.3;
           cardContainer.insertAdjacentHTML(
             "beforeend",
