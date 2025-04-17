@@ -41,11 +41,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         .join("")
         .substring(0, 16);
       let validHashes = await fetchJson("/data-json/validHashes.json");
-
-      // Remove the redirection logic
       if (!validHashes.includes(expectedHash)) {
-        console.warn("Invalid hash detected, but redirection has been disabled.");
-        return; // Stop further execution without redirecting
+        setTimeout(() => {
+          const encryptedUrl = "aHR0cHM6Ly91Y2JnLmdpdGh1Yi5pby8=";
+          const decodedUrl = atob(encryptedUrl);
+          window.location.href = decodedUrl;
+        }, 500);
       }
     }
     await loadGammeData();
@@ -62,21 +63,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.body.appendChild(scrollArrow);
 
+    // Google Ads script yükleme
+    if (!window.adsbygoogle) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+      document.head.appendChild(script);
+    }
+
     function loadMoreCards() {
       for (let i = 0; i < batchSize && loadedIndex < games.length; i++, loadedIndex++) {
         const game = games[loadedIndex];
 
-        const isLarge = loadedIndex % 12 === 0 || Math.random() < 0.3;
-        cardContainer.insertAdjacentHTML(
-          "beforeend",
-          `<a href="${game.url}" class="card${isLarge ? " large" : ""}">
-            <picture>
-              <source data-srcset="${game.image}" type="image/png" class="img-fluid" />
-              <img data-src="${game.image}" alt="${game.title}" class="lazyload img-fluid" width="500" height="500" />
-            </picture>
-            <div class="card-body"><h3>${game.title}</h3></div>
-          </a>`
-        );
+        if ((loadedIndex + 1) % 20 === 0) {
+          // Reklam ekle
+          const adElement = document.createElement("a");
+          adElement.classList.add("card", "large");
+          adElement.innerHTML = `<ins class="adsbygoogle" style="display:inline-block; width:260px; height:260px" data-ad-client="ca-pub-7321073664976914" data-ad-slot="1811365994"></ins>`;
+          cardContainer.appendChild(adElement);
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } else {
+          const isLarge = loadedIndex % 12 === 0 || Math.random() < 0.3;
+          cardContainer.insertAdjacentHTML(
+            "beforeend",
+            `<a href="${game.url}" class="card${isLarge ? " large" : ""}">
+              <picture>
+                <source data-srcset="${game.image}" type="image/png" class="img-fluid" />
+                <img data-src="${game.image}" alt="${game.title}" class="lazyload img-fluid" width="500" height="500" />
+              </picture>
+              <div class="card-body"><h3>${game.title}</h3></div>
+            </a>`
+          );
+        }
       }
       if (window.LazyLoad) new LazyLoad({ elements_selector: ".lazyload" });
       revealCards();
@@ -122,6 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!cardContainer) return; // Eğer öğe yoksa kod çalışmasın
 
   try {
+    // JSON verisini çekme fonksiyonu
     async function fetchJson(url) {
       try {
         let response = await fetch(url);
@@ -133,22 +152,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
+    // Oyunları yükle ve rastgele seç
     const response = await fetch("/data-json/games.json?v=2.0.0");
     const games = await response.json();
 
+    // Oyunları rastgele seçmek için yardımcı fonksiyon
     function getRandomGames(games, count) {
-      let shuffled = games.sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, count);
+      let shuffled = games.sort(() => Math.random() - 0.5); // Oyunları karıştır
+      return shuffled.slice(0, count); // İlk 'count' kadar oyun al
     }
 
     const selectedGames = getRandomGames(games, 20);
 
+    // Reklam kartı ekle
     const adElement = document.createElement("a");
     adElement.classList.add("card", "large");
     adElement.innerHTML = `<ins class="adsbygoogle" style="display:inline-block; width:260px; height:260px" data-ad-client="ca-pub-7321073664976914" data-ad-slot="1811365994"></ins>`;
     cardContainer.appendChild(adElement);
     (window.adsbygoogle = window.adsbygoogle || []).push({});
 
+    // Seçilen oyunları ekle
     selectedGames.forEach((game) => {
       const card = document.createElement("a");
       card.href = game.url;
@@ -163,8 +186,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       cardContainer.appendChild(card);
     });
 
+    // Lazy loading başlatma
     if (window.LazyLoad) new LazyLoad({ elements_selector: ".lazyload" });
 
+    // Kartları görünür yapma
     const cards = document.querySelectorAll(".card");
     cards.forEach((card) => {
       card.classList.add("visible");
@@ -181,10 +206,13 @@ document.addEventListener("DOMContentLoaded", function () {
   if (container) {
     let items = Array.from(container.querySelectorAll("a.card-collection"));
 
+    // Rastgele sıralama
     items.sort(() => Math.random() - 0.5);
 
+    // Yeni sıraya göre öğeleri tekrar ekleme
     items.forEach((item) => container.appendChild(item));
 
+    // Görünürlük ayarı: İlk 11'i göster, diğerlerini gizle
     items.forEach((item, index) => {
       if (index < 12) {
         item.style.display = "block";
