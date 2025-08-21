@@ -41,12 +41,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         .join("")
         .substring(0, 16);
       let validHashes = await fetchJson("/data-json/validHashes.json");
+      
+      // FIXED: Remove redirect and just return instead
       if (!validHashes.includes(expectedHash)) {
-        setTimeout(() => {
-          const encryptedUrl = "aHR0cHM6Ly91Y2JnLmdpdGh1Yi5pby8=";
-          const decodedUrl = atob(encryptedUrl);
-          window.location.href = decodedUrl;
-        }, 500);
+        console.warn("Invalid hash detected, but redirection has been disabled.");
+        return; // Stop further execution without redirecting
       }
     }
     await loadGammeData();
@@ -63,25 +62,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.body.appendChild(scrollArrow);
 
-    
-
     function loadMoreCards() {
       for (let i = 0; i < batchSize && loadedIndex < games.length; i++, loadedIndex++) {
         const game = games[loadedIndex];
 
-         {
-          const isLarge = loadedIndex % 12 === 0 || Math.random() < 0.3;
-          cardContainer.insertAdjacentHTML(
-            "beforeend",
-            `<a href="${game.url}" class="card${isLarge ? " large" : ""}">
-              <picture>
-                <source data-srcset="${game.image}" type="image/png" class="img-fluid" />
-                <img data-src="${game.image}" alt="${game.title}" class="lazyload img-fluid" width="500" height="500" />
-              </picture>
-              <div class="card-body"><h3>${game.title}</h3></div>
-            </a>`
-          );
-        }
+        const isLarge = loadedIndex % 12 === 0 || Math.random() < 0.3;
+        cardContainer.insertAdjacentHTML(
+          "beforeend",
+          `<a href="${game.url}" class="card${isLarge ? " large" : ""}">
+            <picture>
+              <source data-srcset="${game.image}" type="image/png" class="img-fluid" />
+              <img data-src="${game.image}" alt="${game.title}" class="lazyload img-fluid" width="500" height="500" />
+            </picture>
+            <div class="card-body"><h3>${game.title}</h3></div>
+          </a>`
+        );
       }
       if (window.LazyLoad) new LazyLoad({ elements_selector: ".lazyload" });
       revealCards();
