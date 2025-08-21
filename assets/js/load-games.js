@@ -3,7 +3,7 @@ function revealInitialCards() {
   cards.forEach((card, index) => {
     setTimeout(() => {
       card.classList.add("visible");
-    }, index * 3); // Her kart için 100ms gecikme ekleniyor
+    }, index * 3);
   });
 }
 
@@ -12,23 +12,10 @@ document.addEventListener("DOMContentLoaded", revealInitialCards);
 
 document.addEventListener("DOMContentLoaded", async () => {
   const cardContainer = document.querySelector(".index-page-games-list");
-  if (!cardContainer) return; // Eğer öğe yoksa kod çalışmasın
+  if (!cardContainer) return;
 
   try {
-    async function fetchJson(url) {
-      try {
-        let response = await fetch(url);
-        if (!response.ok) throw new Error("JSON yüklenemedi");
-        return await response.json();
-      } catch (error) {
-        console.error("Hata:", error);
-        return null;
-      }
-    }
-
-    // REMOVED THE AUTHENTICATION CHECK THAT CAUSES REDIRECT
-    // The loadGammeData function has been simplified to not redirect
-
+    // REMOVED ALL AUTHENTICATION LOGIC - Direct game loading
     const response = await fetch("/data-json/games.json?v=2.0.0");
     const games = await response.json();
     let loadedIndex = 0;
@@ -37,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Aşağı ok simgesini ekleyelim
     const scrollArrow = document.createElement("div");
     scrollArrow.innerHTML = "&#x2193;";
-    scrollArrow.classList.add("scroll-arrow"); // CSS sınıfını ekliyoruz
+    scrollArrow.classList.add("scroll-arrow");
 
     document.body.appendChild(scrollArrow);
 
@@ -60,7 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (window.LazyLoad) new LazyLoad({ elements_selector: ".lazyload" });
       revealCards();
 
-      // Tüm oyunlar yüklendiğinde oku kaldır
       if (loadedIndex >= games.length) {
         scrollArrow.remove();
       }
@@ -86,7 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.addEventListener("load", revealCards);
     loadMoreCards();
 
-    // Aşağı oka tıklanınca sayfanın en altına kaydır
     scrollArrow.addEventListener("click", () => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     });
@@ -98,29 +83,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 // sag menu
 document.addEventListener("DOMContentLoaded", async () => {
   const cardContainer = document.querySelector(".w-lg-300.right-side-games");
-  if (!cardContainer) return; // Eğer öğe yoksa kod çalışmasın
+  if (!cardContainer) return;
 
   try {
-    // JSON verisini çekme fonksiyonu
-    async function fetchJson(url) {
-      try {
-        let response = await fetch(url);
-        if (!response.ok) throw new Error("JSON yüklenemedi");
-        return await response.json();
-      } catch (error) {
-        console.error("Hata:", error);
-        return null;
-      }
-    }
-
-    // Oyunları yükle ve rastgele seç
     const response = await fetch("/data-json/games.json?v=2.0.0");
     const games = await response.json();
 
-    // Oyunları rastgele seçmek için yardımcı fonksiyon
     function getRandomGames(games, count) {
-      let shuffled = games.sort(() => Math.random() - 0.5); // Oyunları karıştır
-      return shuffled.slice(0, count); // İlk 'count' kadar oyun al
+      let shuffled = games.sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
     }
 
     const selectedGames = getRandomGames(games, 20);
@@ -132,7 +103,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     cardContainer.appendChild(adElement);
     (window.adsbygoogle = window.adsbygoogle || []).push({});
 
-    // Seçilen oyunları ekle
     selectedGames.forEach((game) => {
       const card = document.createElement("a");
       card.href = game.url;
@@ -147,10 +117,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       cardContainer.appendChild(card);
     });
 
-    // Lazy loading başlatma
     if (window.LazyLoad) new LazyLoad({ elements_selector: ".lazyload" });
 
-    // Kartları görünür yapma
     const cards = document.querySelectorAll(".card");
     cards.forEach((card) => {
       card.classList.add("visible");
@@ -167,13 +135,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (container) {
     let items = Array.from(container.querySelectorAll("a.card-collection"));
 
-    // Rastgele sıralama
     items.sort(() => Math.random() - 0.5);
 
-    // Yeni sıraya göre öğeleri tekrar ekleme
     items.forEach((item) => container.appendChild(item));
 
-    // Görünürlük ayarı: İlk 11'i göster, diğerlerini gizle
     items.forEach((item, index) => {
       if (index < 12) {
         item.style.display = "block";
