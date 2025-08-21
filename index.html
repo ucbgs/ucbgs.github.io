@@ -1358,38 +1358,6 @@
       document.getElementById("search").focus();
     });
   </script>
- <script>
-// Block any redirects to ucbg.github.io
-const originalAssign = window.location.assign;
-const originalReplace = window.location.replace;
-
-window.location.assign = function(url) {
-  if (url && url.includes('ucbg.github.io')) {
-    console.log('BLOCKED redirect attempt to:', url);
-    return;
-  }
-  return originalAssign.call(this, url);
-};
-
-window.location.replace = function(url) {
-  if (url && url.includes('ucbg.github.io')) {
-    console.log('BLOCKED replace attempt to:', url);
-    return;
-  }
-  return originalReplace.call(this, url);
-};
-
-// Also block direct href assignments
-Object.defineProperty(window.location, 'href', {
-  set: function(url) {
-    if (url && url.includes('ucbg.github.io')) {
-      console.log('BLOCKED href assignment to:', url);
-      return;
-    }
-    window.location.assign(url);
-  }
-});
-</script>
 </body>
 
 </html>
