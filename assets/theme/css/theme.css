@@ -24334,3 +24334,29 @@ strong {
 .game-controls .btn-group button.active {
   background-color: #007bff;
 }
+.ads {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .mobileShow {
+      display: none
+    }
+
+    @media only screen and (min-device-width:320px) and (max-device-width:480px) {
+      .mobileShow {
+        display: inline
+      }
+    }
+
+    .mobileHide {
+      display: inline
+    }
+
+    @media only screen and (min-device-width:320px) and (max-device-width:480px) {
+      .mobileHide {
+        display: none
+      }
+    }

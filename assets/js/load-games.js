@@ -97,11 +97,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedGames = getRandomGames(games, 20);
 
     // Reklam kartı ekle
-    const adElement = document.createElement("a");
-    adElement.classList.add("card", "large");
-    adElement.innerHTML = `<ins class="adsbygoogle" style="display:inline-block; width:260px; height:260px" data-ad-client="ca-pub-7321073664976914" data-ad-slot="1811365994"></ins>`;
-    cardContainer.appendChild(adElement);
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // remove/avoid running adsbygoogle push for this slot
+// create a wrapper container (not an <a>)
+const adWrapper = document.createElement("div");
+adWrapper.classList.add("card", "large"); // keep your styling
+cardContainer.appendChild(adWrapper);
+
+// 1) create inline script that defines atOptions
+const inlineScript = document.createElement("script");
+inlineScript.type = "text/javascript";
+inlineScript.text = `
+  var atOptions = {
+    'key': '475678d819f17abcff8ad08d0631fec0',
+    'format': 'iframe',
+    'height': 250,
+    'width': 300,
+    'params': {}
+  };
+`;
+// Append inline first so the remote script can read atOptions
+adWrapper.appendChild(inlineScript);
+
+// 2) create external script that actually invokes the ad
+const remoteScript = document.createElement("script");
+remoteScript.type = "text/javascript";
+remoteScript.async = true;
+remoteScript.src = "https://www.highperformanceformat.com/475678d819f17abcff8ad08d0631fec0/invoke.js";
+adWrapper.appendChild(remoteScript);
 
     selectedGames.forEach((game) => {
       const card = document.createElement("a");
